@@ -3,89 +3,142 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>سينما هب - موقع الأفلام</title>
+  <title>سينما بلس - منصة الأفلام</title>
   <style>
+    :root {
+      --bg-color: #141414;
+      --card-bg: #1f1f1f;
+      --primary-color: #e50914;
+      --text-color: #ffffff;
+      --text-secondary: #b3b3b3;
+    }
+
     body {
-      background-color: #121212;
-      color: #ffffff;
+      background-color: var(--bg-color);
+      color: var(--text-color);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
     }
+
+    /* الهيدر وشريط البحث */
     header {
-      background-color: #1f1f1f;
-      padding: 20px;
-      text-align: center;
-      border-bottom: 2px solid #e50914;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(20,20,20,0) 100%);
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
-    header h1 {
-      margin: 0;
-      color: #e50914;
+
+    .logo {
+      color: var(--primary-color);
+      font-size: 24px;
+      font-weight: bold;
+      letter-spacing: 1px;
     }
-    .search-box {
-      margin-top: 15px;
-    }
+
     .search-box input {
-      padding: 10px;
-      width: 60%;
-      max-width: 400px;
-      border-radius: 5px;
-      border: none;
-      font-size: 16px;
+      background-color: rgba(0, 0, 0, 0.75);
+      border: 1px solid #333;
+      padding: 10px 15px;
+      width: 250px;
+      border-radius: 4px;
+      color: white;
+      font-size: 14px;
+      transition: width 0.3s ease;
     }
+
+    .search-box input:focus {
+      width: 320px;
+      outline: none;
+      border-color: #fff;
+    }
+
+    /* قسم عرض الأفلام */
+    .container {
+      padding: 30px 40px;
+    }
+
+    h2 {
+      font-size: 22px;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
     .movies-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 20px;
-      padding: 30px;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 25px;
     }
+
     .movie-card {
-      background-color: #1f1f1f;
-      border-radius: 10px;
+      background-color: var(--card-bg);
+      border-radius: 6px;
       overflow: hidden;
-      transition: transform 0.3s;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      position: relative;
     }
+
     .movie-card:hover {
-      transform: scale(1.05);
+      transform: scale(1.08);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+      z-index: 10;
     }
+
     .movie-card img {
       width: 100%;
-      height: 320px;
+      height: 300px;
       object-fit: cover;
+      display: block;
     }
+
     .movie-info {
       padding: 15px;
-      text-align: center;
     }
-    .movie-info h3 {
-      margin: 0 0 10px;
-      font-size: 18px;
+
+    .movie-title {
+      font-size: 16px;
+      margin: 0 0 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .rating {
-      background-color: #e50914;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-weight: bold;
+
+    .movie-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .rating {
+      color: #46d369;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>🎬 سينما هب</h1>
+    <div class="logo">CINEMA+</div>
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="ابحث عن فيلم..." onkeyup="searchMovies()">
+      <input type="text" id="searchInput" placeholder="بحث عن فيلم..." onkeyup="searchMovies()">
     </div>
   </header>
 
-  <div class="movies-grid" id="moviesContainer">
-    <!-- ستظهر الأفلام هنا -->
+  <div class="container">
+    <h2>الأفلام الرائجة حالياً</h2>
+    <div class="movies-grid" id="moviesContainer">
+      <!-- ستعرض الأفلام هنا -->
+    </div>
   </div>
 
   <script>
-    // بيانات تجريبية (يمكنك استبدالها لاحقاً بـ TMDB API)
     const sampleMovies = [
       { title: "Inception", rating: "8.8", poster: "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg" },
       { title: "Interstellar", rating: "8.7", poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" },
@@ -102,8 +155,11 @@
           <div class="movie-card">
             <img src="${movie.poster}" alt="${movie.title}">
             <div class="movie-info">
-              <h3>${movie.title}</h3>
-              <span class="rating">⭐ ${movie.rating}</span>
+              <div class="movie-title">${movie.title}</div>
+              <div class="movie-meta">
+                <span>2023</span>
+                <span class="rating">⭐ ${movie.rating}</span>
+              </div>
             </div>
           </div>
         `;
@@ -116,7 +172,6 @@
       displayMovies(filtered);
     }
 
-    // عرض الأفلام عند فتح الصفحة
     displayMovies(sampleMovies);
   </script>
 
